@@ -1,3 +1,23 @@
 spring:
   application:
     name: ECI-SportLife
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sportlife
+    username: postgres
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    mongodb:
+      uri: mongodb+srv://dosw:<db_password>@cluster0.kofya5y.mongodb.net/?appName=Cluster0
+
+server:
+  port: 8080
