@@ -1,0 +1,61 @@
+name: CI/CD Pipeline - ECI-SportLife
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+  pull_request:
+    branches:
+      - develop
+      - master
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Configurar Java 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Maven
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: Build con Maven
+        run: mvn clean compile -f ECI-SportLife/pom.xml
+
+      - name: Ejecutar tests
+        run: mvn test -f ECI-SportLife/pom.xml
+
+  analysis:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Configurar Java 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Análisis SonarCloud
+        run: mvn verify sonar:sonar
+          -Dsonar.projectKey=ECI-SportLife
+          -Dsonar.organization=TU_ORG_SONAR
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+          -f ECI-SportLife/pom.xml
