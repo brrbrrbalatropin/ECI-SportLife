@@ -4,6 +4,7 @@ import edu.eci.sportlife.exception.ResourceNotFoundException;
 import edu.eci.sportlife.model.Role;
 import edu.eci.sportlife.model.User;
 import edu.eci.sportlife.model.dto.AuthResponse;
+import edu.eci.sportlife.model.dto.LoginRequest;
 import edu.eci.sportlife.model.dto.RegisterRequest;
 import edu.eci.sportlife.repository.UserRepository;
 import edu.eci.sportlife.security.JwtService;
@@ -38,4 +39,17 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateToken(user.getEmail());
         return new AuthResponse(token, "Bearer", user.getEmail());
     }
+    @Override
+    public AuthResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new ResourceNotFoundException("Invalid credentials");
+        }
+
+        String token = jwtService.generateToken(user.getEmail());
+        return new AuthResponse(token, "Bearer", user.getEmail());
+    }
+
 }

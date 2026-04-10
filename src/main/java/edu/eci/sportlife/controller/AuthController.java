@@ -1,6 +1,7 @@
 package edu.eci.sportlife.controller;
 
 import edu.eci.sportlife.model.dto.AuthResponse;
+import edu.eci.sportlife.model.dto.LoginRequest;
 import edu.eci.sportlife.model.dto.RegisterRequest;
 import edu.eci.sportlife.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -18,5 +19,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }
