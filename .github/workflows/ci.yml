@@ -32,11 +32,10 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
       - name: Build con Maven
-        run: mvn clean compile -f ECI-SportLife/pom.xml
+        run: mvn clean compile
 
       - name: Ejecutar tests
-        run: mvn test -f ECI-SportLife/pom.xml
-
+        run: mvn test
   analysis:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
